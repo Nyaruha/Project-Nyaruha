@@ -31,7 +31,7 @@ ScreenGui.Parent = game.CoreGui
 local MainFrame = Instance.new("ImageLabel")
 MainFrame.Size = UDim2.new(0, 500, 0, 320)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -210)
-MainFrame.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/e4f13c29b567bc8364fec956eb5fa9fece43dfea/NekoMenu.png"
+MainFrame.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoMenu.png"
 MainFrame.BackgroundTransparency = 1
 MainFrame.ClipsDescendants = true
 MainFrame.Visible = false
@@ -196,7 +196,7 @@ VisibilityButton.MouseButton1Click:Connect(function()
     VisibilityCheckEnabled = not VisibilityCheckEnabled
     VisibilityButton.Text = "Проверка на видимость: " .. (VisibilityCheckEnabled and "ВКЛ" or "ВЫКЛ")
     game.StarterGui:SetCore("SendNotification", {
-        Title = "Gawr Gura Menu";
+        Title = "Project Nyaruha";
         Text = VisibilityCheckEnabled and "Проверка на видимость ON" or "Проверка на видимость OFF";
         Duration = 5;
     })
@@ -288,7 +288,7 @@ end)
 local OpenMenuButton = Instance.new("ImageButton")
 OpenMenuButton.Size = UDim2.new(0, 80, 0, 80)
 OpenMenuButton.Position = UDim2.new(0, 20, 0.5, -40)
-OpenMenuButton.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/e4f13c29b567bc8364fec956eb5fa9fece43dfea/NekoOpen.png"
+OpenMenuButton.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoOpen.png"
 OpenMenuButton.BackgroundTransparency = 1
 OpenMenuButton.Parent = ScreenGui
 

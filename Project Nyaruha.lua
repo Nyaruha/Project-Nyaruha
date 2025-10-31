@@ -31,7 +31,7 @@ ScreenGui.Parent = game.CoreGui
 local MainFrame = Instance.new("ImageLabel")
 MainFrame.Size = UDim2.new(0, 500, 0, 320)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -210)
-MainFrame.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoMenu.png"
+MainFrame.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoMenu.png"
 MainFrame.BackgroundTransparency = 1
 MainFrame.ClipsDescendants = true
 MainFrame.Visible = false
@@ -288,7 +288,7 @@ end)
 local OpenMenuButton = Instance.new("ImageButton")
 OpenMenuButton.Size = UDim2.new(0, 80, 0, 80)
 OpenMenuButton.Position = UDim2.new(0, 20, 0.5, -40)
-OpenMenuButton.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/blob/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoOpen.png"
+OpenMenuButton.Image = "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoOpen.png"
 OpenMenuButton.BackgroundTransparency = 1
 OpenMenuButton.Parent = ScreenGui
 

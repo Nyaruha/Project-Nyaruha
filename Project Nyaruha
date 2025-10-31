@@ -1,0 +1,353 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local TweenService = game:GetService("TweenService")
+
+local function stylizeButton(button)
+    button.Font = Enum.Font.SourceSansBold
+    button.TextScaled = true
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = button
+end
+
+local function stylizeLabel(label)
+    label.Font = Enum.Font.SourceSansBold
+    label.TextScaled = true
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = label
+end
+
+-- Создаём GUI меню
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.CoreGui
+
+local MainFrame = Instance.new("ImageLabel")
+MainFrame.Size = UDim2.new(0, 500, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -210)
+MainFrame.Image = "rbxassetid://81330346107228"
+MainFrame.BackgroundTransparency = 1
+MainFrame.ClipsDescendants = true
+MainFrame.Visible = false
+MainFrame.Parent = ScreenGui
+
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 20)
+FrameCorner.Parent = MainFrame
+
+-- Заголовок
+local MenuLabel = Instance.new("TextLabel")
+MenuLabel.Size = UDim2.new(0, 280, 0, 30)
+MenuLabel.Position = UDim2.new(0.5, -140, 0, 10)
+MenuLabel.Text = "Gawr Gura Menu"
+MenuLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+MenuLabel.BackgroundTransparency = 1
+MenuLabel.TextScaled = true
+MenuLabel.Font = Enum.Font.SourceSansBold
+MenuLabel.Parent = MainFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 1.5
+UIStroke.Color = Color3.fromRGB(70, 130, 180)
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+UIStroke.Parent = MenuLabel
+
+-- Aimbot toggle
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 200, 0, 40)
+ToggleButton.Position = UDim2.new(0, 20, 0, 60)
+ToggleButton.Text = "Aimbot: OFF"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Parent = MainFrame
+stylizeButton(ToggleButton)
+
+-- Игнорировать друзей
+local IgnoreFriendsButton = Instance.new("TextButton")
+IgnoreFriendsButton.Size = UDim2.new(0, 200, 0, 40)
+IgnoreFriendsButton.Position = UDim2.new(0, 20, 0, 110)
+IgnoreFriendsButton.Text = "Игнорировать друзей: ВЫКЛ"
+IgnoreFriendsButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+IgnoreFriendsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+IgnoreFriendsButton.Parent = MainFrame
+stylizeButton(IgnoreFriendsButton)
+
+-- Видимость
+local VisibilityButton = Instance.new("TextButton")
+VisibilityButton.Size = UDim2.new(0, 200, 0, 40)
+VisibilityButton.Position = UDim2.new(0, 20, 0, 160)
+VisibilityButton.Text = "Проверка на видимость: ВЫКЛ"
+VisibilityButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+VisibilityButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+VisibilityButton.Parent = MainFrame
+stylizeButton(VisibilityButton)
+
+-- Коррекция ярлык
+local CorrectionLabel = Instance.new("TextLabel")
+CorrectionLabel.Size = UDim2.new(0, 200, 0, 30)
+CorrectionLabel.Position = UDim2.new(0, 280, 0, 60)
+CorrectionLabel.Text = "Коррекция: 0"
+CorrectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CorrectionLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+CorrectionLabel.BackgroundTransparency = 0.2
+CorrectionLabel.TextScaled = true
+CorrectionLabel.Parent = MainFrame
+stylizeButton(CorrectionLabel)
+
+local LabelCorner = Instance.new("UICorner")
+LabelCorner.CornerRadius = UDim.new(0, 10)
+LabelCorner.Parent = CorrectionLabel
+
+-- Поле коррекции
+local CorrectionSlider = Instance.new("TextBox")
+CorrectionSlider.Size = UDim2.new(0, 200, 0, 40)
+CorrectionSlider.Position = UDim2.new(0, 280, 0, 100)
+CorrectionSlider.Text = "0"
+CorrectionSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+CorrectionSlider.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+CorrectionSlider.TextScaled = true
+CorrectionSlider.ClearTextOnFocus = false
+CorrectionSlider.TextXAlignment = Enum.TextXAlignment.Center
+CorrectionSlider.TextYAlignment = Enum.TextYAlignment.Center
+CorrectionSlider.Parent = MainFrame
+stylizeButton(CorrectionSlider)
+
+local SliderCorner = Instance.new("UICorner")
+SliderCorner.CornerRadius = UDim.new(0, 10)
+SliderCorner.Parent = CorrectionSlider
+
+-- Радиус
+local AimbotRadius = 100
+
+local RadiusLabel = Instance.new("TextLabel")
+RadiusLabel.Size = UDim2.new(0, 200, 0, 30)
+RadiusLabel.Position = UDim2.new(0, 280, 0, 150)
+RadiusLabel.Text = "Радиус Aimbot: 100"
+RadiusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+RadiusLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+RadiusLabel.BackgroundTransparency = 0.2
+RadiusLabel.TextScaled = true
+RadiusLabel.Parent = MainFrame
+stylizeButton(RadiusLabel)
+
+local RadiusBox = Instance.new("TextBox")
+RadiusBox.Size = UDim2.new(0, 200, 0, 30)
+RadiusBox.Position = UDim2.new(0, 280, 0, 190)
+RadiusBox.Text = tostring(AimbotRadius)
+RadiusBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+RadiusBox.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+RadiusBox.TextScaled = true
+RadiusBox.ClearTextOnFocus = false
+RadiusBox.Parent = MainFrame
+stylizeButton(RadiusBox)
+
+-- Кнопка закрытия
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 200, 0, 30)
+CloseButton.Position = UDim2.new(0.5, -100, 0, 240)
+CloseButton.Text = "Закрыть"
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 69, 0)
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextScaled = true
+CloseButton.Parent = MainFrame
+stylizeButton(CloseButton)
+
+-- Надпись с версией
+local VersionLabel = Instance.new("TextLabel")
+VersionLabel.Size = UDim2.new(0, 100, 0, 25)
+VersionLabel.Position = UDim2.new(1, -110, 1, -30) -- правая нижняя часть MainFrame
+VersionLabel.AnchorPoint = Vector2.new(0, 0)
+VersionLabel.BackgroundTransparency = 1
+VersionLabel.Text = "1.31.1v🐾"
+VersionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+VersionLabel.Font = Enum.Font.SourceSansBold
+VersionLabel.TextScaled = true
+VersionLabel.Parent = MainFrame
+
+local versionStroke = Instance.new("UIStroke")
+versionStroke.Thickness = 1.2
+versionStroke.Color = Color3.fromRGB(70, 130, 180)
+versionStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+versionStroke.Parent = VersionLabel
+
+-- Обработчики кнопок
+local AimbotEnabled = false
+local IgnoreFriends = false
+local VisibilityCheckEnabled = false
+local BaseCorrection = 0
+
+ToggleButton.MouseButton1Click:Connect(function()
+    AimbotEnabled = not AimbotEnabled
+    ToggleButton.Text = "Aimbot: " .. (AimbotEnabled and "ON" or "OFF")
+end)
+
+IgnoreFriendsButton.MouseButton1Click:Connect(function()
+    IgnoreFriends = not IgnoreFriends
+    IgnoreFriendsButton.Text = "Игнорировать друзей: " .. (IgnoreFriends and "ВКЛ" or "ВЫКЛ")
+end)
+
+VisibilityButton.MouseButton1Click:Connect(function()
+    VisibilityCheckEnabled = not VisibilityCheckEnabled
+    VisibilityButton.Text = "Проверка на видимость: " .. (VisibilityCheckEnabled and "ВКЛ" or "ВЫКЛ")
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Gawr Gura Menu";
+        Text = VisibilityCheckEnabled and "Проверка на видимость ON" or "Проверка на видимость OFF";
+        Duration = 5;
+    })
+end)
+
+CorrectionSlider.FocusLost:Connect(function()
+    local newValue = tonumber(CorrectionSlider.Text)
+    if newValue then
+        BaseCorrection = newValue
+        CorrectionLabel.Text = "Коррекция: " .. newValue
+    else
+        CorrectionSlider.Text = tostring(BaseCorrection)
+    end
+end)
+
+RadiusBox.FocusLost:Connect(function()
+    local val = tonumber(RadiusBox.Text)
+    if val then
+        AimbotRadius = val
+        RadiusLabel.Text = "Радиус Aimbot: " .. val
+    else
+        RadiusBox.Text = tostring(AimbotRadius)
+    end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
+-- Цель
+local function IsVisible(targetPosition)
+    local origin = Camera.CFrame.Position
+    local direction = (targetPosition - origin).Unit * 1000  -- Направление луча
+    local raycastParams = RaycastParams.new()
+
+    -- Игнорируем все объекты, которые не связаны с целью
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.FilterDescendantsInstances = {LocalPlayer.Character}  -- Игнорируем собственное тело
+
+    -- Теперь добавляем фильтрацию для потенциальных преград (невидимые части, прозрачные объекты и т.д.)
+    -- Если объект имеет прозрачность более 0.5, можно его игнорировать.
+    raycastParams.IgnoreWater = true  -- Игнорировать воду
+
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    if result then
+        local hitPart = result.Instance
+        -- Проверка, что попадание в части персонажа другого игрока
+        local hitPlayer = Players:GetPlayerFromCharacter(hitPart:FindFirstAncestorOfClass("Model"))
+        if hitPlayer then
+            return true  -- Видимость подтверждена
+        end
+    end
+    return false  -- Если нет попадания в игрока
+end
+
+local function GetBestTarget()
+    local bestTarget = nil
+    local shortestDistance = math.huge
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+            if IgnoreFriends and LocalPlayer:IsFriendsWith(player.UserId) then continue end
+            local head = player.Character.Head
+            local distance = (head.Position - Camera.CFrame.Position).magnitude
+            local screenPosition, onScreen = Camera:WorldToViewportPoint(head.Position)
+            if onScreen and distance < shortestDistance and distance <= AimbotRadius then
+                if not VisibilityCheckEnabled or IsVisible(head.Position) then
+                    local velocity = player.Character.PrimaryPart.Velocity * 0.1
+                    local predictedPosition = head.Position + velocity
+                    bestTarget = {position = predictedPosition, distance = distance}
+                    shortestDistance = distance
+                end
+            end
+        end
+    end
+    return bestTarget
+end
+
+RunService.RenderStepped:Connect(function()
+    if AimbotEnabled then
+        local targetData = GetBestTarget()
+        if targetData then
+            local heightCorrection = BaseCorrection * (targetData.distance / 50)
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetData.position - Vector3.new(0, heightCorrection, 0))
+        end
+    end
+end)
+
+-- Кнопка открытия меню
+local OpenMenuButton = Instance.new("ImageButton")
+OpenMenuButton.Size = UDim2.new(0, 80, 0, 80)
+OpenMenuButton.Position = UDim2.new(0, 20, 0.5, -40)
+OpenMenuButton.Image = "rbxassetid://97172666774959"
+OpenMenuButton.BackgroundTransparency = 1
+OpenMenuButton.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 20)
+UICorner.Parent = OpenMenuButton
+
+local isMenuOpen = false
+
+OpenMenuButton.MouseButton1Click:Connect(function()
+    if not isMenuOpen then
+        MainFrame.Visible = true
+        MainFrame.Position = UDim2.new(0.5, -250, 0.5, -500) -- начальная внеэкраная позиция
+        local tweenIn = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0.5, -250, 0.5, -210)
+        })
+        tweenIn:Play()
+    else
+        local tweenOut = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, -250, 0.5, -500)
+        })
+        tweenOut:Play()
+        tweenOut.Completed:Connect(function()
+            MainFrame.Visible = false
+        end)
+    end
+    isMenuOpen = not isMenuOpen
+end)
+
+-- Перетаскивание кнопки
+local dragging, dragInput, dragStart, startPos
+local function updateInput(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        local delta = input.Position - dragStart
+        OpenMenuButton.Position = UDim2.new(0, startPos.X.Offset + delta.X, 0, startPos.Y.Offset + delta.Y)
+    end
+end
+
+OpenMenuButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = OpenMenuButton.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+OpenMenuButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        updateInput(input)
+    end
+end)

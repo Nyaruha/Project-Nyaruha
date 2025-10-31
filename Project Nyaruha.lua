@@ -28,6 +28,20 @@ end
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.CoreGui
 
+local ContentProvider = game:GetService("ContentProvider")
+
+local urls = {
+    "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoMenu.png",
+    "https://raw.githubusercontent.com/Nyaruha/Project-Nyaruha/4117a7de01ef2c82f4f4d85311a828c464cdedc9/NekoOpen.png"
+}
+
+-- Прогружаем картинки заранее
+for _, url in pairs(urls) do
+    local img = Instance.new("ImageLabel") -- временно создаём ImageLabel
+    img.Image = url
+    ContentProvider:PreloadAsync({img})
+end
+
 local MainFrame = Instance.new("ImageLabel")
 MainFrame.Size = UDim2.new(0, 500, 0, 320)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -210)
